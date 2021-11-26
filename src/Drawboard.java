@@ -46,6 +46,7 @@ public class Drawboard extends JPanel {
         window.setLayout(new BorderLayout());
         window.add(Toolbar.getInstance(), BorderLayout.NORTH);
         window.add(this, BorderLayout.CENTER);
+        window.add(PageSwitcher.getInstance(),BorderLayout.SOUTH);
         window.setVisible(true);
     }
 

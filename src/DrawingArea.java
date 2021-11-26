@@ -1,64 +1,56 @@
-import javax.swing.JPanel;
-
-import javax.swing.JFrame;
-import java.awt.*;
-
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
-// 画图区域（窗口也是在该类中创建的）
-public class Drawboard extends JPanel {
-    static final long serialVersionUID = 1357997531;
-    // 同样使用单例模式
-    private static Drawboard db;
+public class DrawingArea extends JPanel {
+    private int id=0;
+    private static ArrayList<DrawingArea> pageList = new ArrayList<>();
     private BufferedImage image = null;
-
-    // 获得实例的静态函数
-    public static Drawboard getInstance() {
-        if (db == null) {
-            db = new Drawboard();
-        }
-        return db;
-    }
-
-    private Drawboard() {
+    /**
+     * Creates a new <code>JPanel</code> with a double buffer
+     * and a flow layout.
+     */
+    public DrawingArea(int id) {
+        this.id=id;
         // 为画图区域添加背景色
         this.setBackground(Color.WHITE);
         // 绘制窗口，设置布局，将工具栏、绘图区域（this）加入到window中并显示
-        this.drawUI();
+//        this.drawUI();
         // 为绘图区域添加鼠标/键盘监听
-        this.bindEvent();
+//        this.bindEvent();
         // 不打开文件
         image = null;
         // 得到窗口焦点
         this.requestFocus();
     }
 
-    private void drawUI() {
-        JFrame window = new JFrame("画板");
-        window.setSize(900, 675);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLayout(new BorderLayout());
-        window.add(Toolbar.getInstance(), BorderLayout.NORTH);
-        window.add(this, BorderLayout.CENTER);
-        window.add(PageSwitcher.getInstance(),BorderLayout.SOUTH);
-        window.setVisible(true);
+    public static DrawingArea getInstance(int index){
+        return (pageList.isEmpty() || index>=pageList.size() )? null : pageList.get(index);
+//        if (pageList.isEmpty() || index>=pageList.size())
+//            return null;
+//        else 
+//            return pageList.get(index);
+    }
+    
+    public static void addInstance(){
+        EventListener.addInstance();
+        pageList.add(new DrawingArea(pageList.size()));
     }
 
-    private void bindEvent() {
+    public void bindEvent() {
         // 得到监听器实例
-        EventListener el = EventListener.getInstance();
+        EventListener el = EventListener.getInstance(id);
         // 添加鼠标/鼠标移动/键盘的监听器
         // （因为el实现了鼠标MouseListener、鼠标移动MouseMotionListener、键盘KeyListener的接口，所以可以这样写）
         this.addMouseListener(el);
         this.addMouseMotionListener(el);
         this.addKeyListener(el);
         // 将绘图区域的“笔”传给监听器，在监听器内进行绘制
+        assert this.getGraphics()!=null;
         el.setPen(this.getGraphics());
     }
 
@@ -70,7 +62,7 @@ public class Drawboard extends JPanel {
         if (image != null) {
             p.drawImage(image, 0, 0, null);
         }
-        EventListener el = EventListener.getInstance();
+        EventListener el = EventListener.getInstance(this.id);
         // 遍历绘图历史，绘制该图形
         for (Shape item : el.getHistory()) {
             item.draw(p);
@@ -123,12 +115,13 @@ public class Drawboard extends JPanel {
             // 读取该张图片
             image = ImageIO.read(new File(filePath));
             // 清除所有历史
-            EventListener.getInstance().clear(false);
+            EventListener.getInstance(this.id).clear(false);
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
     }
+
 
     public void clearFile() {
         // 移除内部的图片缓存

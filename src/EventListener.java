@@ -4,14 +4,16 @@ import javax.swing.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 // 该类实现了鼠标事件、键盘事件和按钮点击事件的监听
 public class EventListener extends MouseInputAdapter implements ActionListener, KeyListener, ChangeListener {
+    private int id;
     // 使用单例模式
-    private static EventListener i;
+    private static ArrayList<EventListener> elList = new ArrayList<>();
     // 点击点和落点的坐标
     private int x1, x2, y1, y2,dragX,dragY;
     // 当前选中的颜色
@@ -34,7 +36,8 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
     private Shape selectedShape=null;
     private Shape afterSelectedShape=null;
 
-    private EventListener() {
+    private EventListener(int id) {
+        this.id=id;
         // 默认画笔为黑色，背景色为白色，选中操作为铅笔
         this.selectedColor = Color.BLACK;
         this.backgroundColor = Color.WHITE;
@@ -43,22 +46,22 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
     }
 
     // 获取实例的静态方法
-    public static EventListener getInstance() {
-        if (i == null) {
-            i = new EventListener();
-        }
-        return i;
+    public static EventListener getInstance(int index) {
+        return (elList.isEmpty() || index>=elList.size() )? null : elList.get(index);
     }
 
+    public static void addInstance(){
+        elList.add(new EventListener(elList.size()));
+    }
     // 清除所有状态并重新绘制
     public void clear(boolean clearFile) {
         history.clear();
         previous.clear();
         if (clearFile) {
             // 清除之前打开的文件
-            Drawboard.getInstance().clearFile();
+            DrawingArea.getInstance(this.id).clearFile();
         }
-        Drawboard.getInstance().repaint();
+        DrawingArea.getInstance(this.id).repaint();
     }
 
     @Override
@@ -79,14 +82,14 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
             // 选择帮助操作时输出帮助信息并return
             if (instance.getText().equals("帮助")) {
                 showHelpMessage();
-                Drawboard.getInstance().requestFocus();
+                MainWindow.getInstance().requestFocus();
                 return;
             }
             // 否则将操作赋值给参数
             this.operation = instance.getText();
         }
         // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
-        Drawboard.getInstance().requestFocus();
+        MainWindow.getInstance().requestFocus();
     }
 
     @Override
@@ -111,7 +114,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         } else {
             addShape();
         }
-        Drawboard.getInstance().requestFocus();
+        MainWindow.getInstance().requestFocus();
     }
 
     @Override
@@ -196,7 +199,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
 //        释放选中的图形
         selectedShape=null;
         afterSelectedShape=null;
-        Drawboard.getInstance().repaint();
+        MainWindow.getInstance().repaint();
     }
 
     /*
@@ -360,8 +363,8 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         if (stack.size() >= 1 && stack.peek() == 17) {
             switch (e.getKeyCode()) {
                 case 90 -> revert(false); // Ctrl+Z -> 撤销
-                case 83 -> Drawboard.getInstance().savePanelAsImage(); // Ctrl+S -> 保存图片
-                case 79 -> Drawboard.getInstance().loadImageToPanel(); // Ctrl+O -> 打开图片
+                case 83 -> DrawingArea.getInstance(this.id).savePanelAsImage(); // Ctrl+S -> 保存图片
+                case 79 -> DrawingArea.getInstance(this.id).loadImageToPanel(); // Ctrl+O -> 打开图片
                 case 81 -> this.clear(true); // Ctrl+Q -> 清空历史
                 case 72 -> showHelpMessage();// Ctrl+H -> 弹出帮助信息
             }
@@ -385,7 +388,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         JSlider jslider = (JSlider) e.getSource();
         this.width = jslider.getValue();
         // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
-        Drawboard.getInstance().requestFocus();
+        MainWindow.getInstance().requestFocus();
     }
 
     // 撤销有两种类型，锁定撤销和非锁定撤销
@@ -401,7 +404,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
                 break;
             }
         }
-        Drawboard.getInstance().repaint();
+        MainWindow.getInstance().repaint();
     }
 
     public Color getSelectedColor() {
@@ -448,7 +451,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
 
     // 设置背景色
     public void setBackgroundColor() {
-        Drawboard instance = Drawboard.getInstance();
+        MainWindow instance = MainWindow.getInstance();
         instance.setBackground(backgroundColor);
         for (var item : history) {
             if (item instanceof Eraser) {

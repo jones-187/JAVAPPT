@@ -1,9 +1,9 @@
 import java.awt.Graphics;
 
 public class Eraser extends Shape {
-
     public Eraser(int x1, int y1) {
-        super(x1, y1, el.getBackgroundColor());
+        super(x1, y1);
+        selectedColor=el.getBackgroundColor();
     }
 
     @Override

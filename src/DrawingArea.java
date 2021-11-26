@@ -29,7 +29,7 @@ public class DrawingArea extends JPanel {
     }
 
     public static DrawingArea getInstance(int index){
-        return (pageList.isEmpty() || index>=pageList.size() )? null : pageList.get(index);
+        return (pageList.isEmpty() || index>=pageList.size() || index<0)? null : pageList.get(index);
 //        if (pageList.isEmpty() || index>=pageList.size())
 //            return null;
 //        else 
@@ -39,6 +39,14 @@ public class DrawingArea extends JPanel {
     public static void addInstance(){
         EventListener.addInstance();
         pageList.add(new DrawingArea(pageList.size()));
+    }
+
+    public static void addInstance(int index) {
+        EventListener.addInstance(index);
+        for (int i = index; i <pageList.size() ; i++) {
+            pageList.get(i).id++;
+        }
+        pageList.add(index,new DrawingArea(index));
     }
 
     public void bindEvent() {

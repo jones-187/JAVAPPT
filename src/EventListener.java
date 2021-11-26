@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 // 该类实现了鼠标事件、键盘事件和按钮点击事件的监听
-public class EventListener extends MouseInputAdapter implements ActionListener, KeyListener, ChangeListener {
+public class EventListener extends MouseInputAdapter implements  KeyListener { //ActionListener,, ChangeListener
     private int id;
     // 使用单例模式
     private static ArrayList<EventListener> elList = new ArrayList<>();
@@ -47,12 +47,20 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
 
     // 获取实例的静态方法
     public static EventListener getInstance(int index) {
-        return (elList.isEmpty() || index>=elList.size() )? null : elList.get(index);
+        return (elList.isEmpty() || index>=elList.size() || index<0 )? null : elList.get(index);
     }
 
     public static void addInstance(){
         elList.add(new EventListener(elList.size()));
     }
+
+    public static void addInstance(int index) {
+        for (int i = index; i <elList.size() ; i++) {
+            elList.get(i).id++;
+        }
+        elList.add(index,new EventListener(index));
+    }
+
     // 清除所有状态并重新绘制
     public void clear(boolean clearFile) {
         history.clear();
@@ -63,34 +71,34 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         }
         DrawingArea.getInstance(this.id).repaint();
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JButton instance = (JButton) e.getSource();
-        // 点击的是颜色（因为颜色按钮没有文字）
-        if ("".equals(e.getActionCommand())) {
-            if (Toolbar.getInstance().isForebackgroundSelected()) {
-                // 设置前景色
-                selectedColor = instance.getBackground();
-            } else {
-                // 设置背景色
-                backgroundColor = instance.getBackground();
-                // 刷新画板
-                this.setBackgroundColor();
-            }
-        } else {
-            // 选择帮助操作时输出帮助信息并return
-            if (instance.getText().equals("帮助")) {
-                showHelpMessage();
-                MainWindow.getInstance().requestFocus();
-                return;
-            }
-            // 否则将操作赋值给参数
-            this.operation = instance.getText();
-        }
-        // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
-        MainWindow.getInstance().requestFocus();
-    }
+//
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        JButton instance = (JButton) e.getSource();
+//        // 点击的是颜色（因为颜色按钮没有文字）
+//        if ("".equals(e.getActionCommand())) {
+//            if (Toolbar.getInstance().isForebackgroundSelected()) {
+//                // 设置前景色
+//                selectedColor = instance.getBackground();
+//            } else {
+//                // 设置背景色
+//                backgroundColor = instance.getBackground();
+//                // 刷新画板
+//                this.setBackgroundColor();
+//            }
+//        } else {
+//            // 选择帮助操作时输出帮助信息并return
+//            if (instance.getText().equals("帮助")) {
+//                showHelpMessage();
+//                MainWindow.getInstance().requestFocus();
+//                return;
+//            }
+//            // 否则将操作赋值给参数
+//            this.operation = instance.getText();
+//        }
+//        // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
+//        MainWindow.getInstance().requestFocus();
+//    }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -114,7 +122,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         } else {
             addShape();
         }
-        MainWindow.getInstance().requestFocus();
+        DrawingArea.getInstance( MainWindow.getInstance().getCurId() ).requestFocus();
     }
 
     @Override
@@ -383,13 +391,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         stack.pop();
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        JSlider jslider = (JSlider) e.getSource();
-        this.width = jslider.getValue();
-        // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
-        MainWindow.getInstance().requestFocus();
-    }
+
 
     // 撤销有两种类型，锁定撤销和非锁定撤销
     // 锁定撤销时，起点不会被删除，在动态拖拽操作中使用
@@ -451,7 +453,7 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
 
     // 设置背景色
     public void setBackgroundColor() {
-        MainWindow instance = MainWindow.getInstance();
+        DrawingArea instance = DrawingArea.getInstance( MainWindow.getInstance().getCurId() );
         instance.setBackground(backgroundColor);
         for (var item : history) {
             if (item instanceof Eraser) {
@@ -481,7 +483,23 @@ public class EventListener extends MouseInputAdapter implements ActionListener, 
         tmp.draw(pen);
     }
 
-    private void showHelpMessage() {
+    public void showHelpMessage() {
         JOptionPane.showInternalMessageDialog(null, Utils.getHelpMessage(), "帮助", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setSelectedColor(Color selectedColor) {
+        this.selectedColor = selectedColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 }

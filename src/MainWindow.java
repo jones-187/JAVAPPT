@@ -1,11 +1,8 @@
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import javax.swing.JFrame;
 import java.awt.*;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.image.BufferedImage;
@@ -13,11 +10,7 @@ import java.io.File;
 
 // 画图区域（窗口也是在该类中创建的）
 public class MainWindow extends  JFrame{
-    private static int curId=0;
-
-    public static int getCurId() {
-        return curId;
-    }
+    private int curId=0;
 
     //    static final long serialVersionUID = 1357997531;
     // 同样使用单例模式
@@ -41,6 +34,31 @@ public class MainWindow extends  JFrame{
 //        image = null;
         // 得到窗口焦点
 //        this.requestFocus();
+    }
+
+    public boolean addNewPage() {
+        DrawingArea.addInstance(this.curId+1);
+        return this.turnToPage(curId+1);
+    }
+
+    private boolean turnToPage(int index){
+        DrawingArea curInstance,nextInstance;
+        if ( (curInstance = DrawingArea.getInstance(curId)) == null
+                || (nextInstance = DrawingArea.getInstance(index)) == null ) {
+            return false;
+        }
+
+        this.remove(curInstance);
+        this.add(nextInstance);
+        curId=index;
+        /*
+         * 在使用remove后，总是重新验证并重新绘制
+         * */
+        this.revalidate();
+        this.repaint();
+        this.bindEvent();
+        DrawingArea.getInstance(curId).requestFocus();
+        return true;
     }
 
     private void drawUI() {
@@ -132,4 +150,16 @@ public class MainWindow extends  JFrame{
 //        // 移除内部的图片缓存
 //        this.image = null;
 //    }
+
+    public  int getCurId() {
+        return curId;
+    }
+
+    public boolean nextPage() {
+        return this.turnToPage(curId+1);
+    }
+
+    public boolean lastPage() {
+        return this.turnToPage(curId-1);
+    }
 }

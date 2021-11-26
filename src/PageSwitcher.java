@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 public class PageSwitcher extends JPanel {
     private int totalPagesNum = 1,index=1;
     private static PageSwitcher instance;
+    private JLabel pagesIndicator = new JLabel();
 
     /**
      * Creates a new <code>JPanel</code> with a double buffer
@@ -14,17 +15,17 @@ public class PageSwitcher extends JPanel {
     public PageSwitcher() {
 //        this.setLayout(new FlowLayout());
 
-        StringBuilder sb= new StringBuilder();
-        sb.append(index);
-        sb.append(" / ");
-        sb.append(totalPagesNum);
-        JLabel pagesIndicator=new JLabel(sb.toString());
-
+//        StringBuilder sb= new StringBuilder();
+//        sb.append(index);
+//        sb.append(" / ");
+//        sb.append(totalPagesNum);
+//        this.pagesIndicator=new JLabel(sb.toString());
+        this.updatePagesIndicator();
         JButton nextPage = new JButton("下一张");
-        nextPage.addActionListener(new getNewPage());
+        nextPage.addActionListener(new nextPage());
         this.add(nextPage,BorderLayout.NORTH);
         JButton lastPage = new JButton("上一张");
-        lastPage.addActionListener(new getNewPage());
+        lastPage.addActionListener(new lastPage());
         this.add(lastPage,BorderLayout.SOUTH);
         JButton newPage = new JButton("新建");
         newPage.addActionListener(new getNewPage());
@@ -41,6 +42,14 @@ public class PageSwitcher extends JPanel {
 
     }
 
+    private void updatePagesIndicator(){
+        StringBuilder sb= new StringBuilder();
+        sb.append(index);
+        sb.append(" / ");
+        sb.append(totalPagesNum);
+        this.pagesIndicator.setText(sb.toString());
+        pagesIndicator.repaint();
+    }
 
     private class getNewPage implements ActionListener{
 
@@ -51,7 +60,46 @@ public class PageSwitcher extends JPanel {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
+            if(MainWindow.getInstance().addNewPage()) {
+                PageSwitcher.this.totalPagesNum++;
+                PageSwitcher.this.index++;
+                PageSwitcher.this.updatePagesIndicator();
+            }
+//            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private class nextPage implements ActionListener{
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param e the event to be processed
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(MainWindow.getInstance().nextPage()){
+                PageSwitcher.this.index++;
+                PageSwitcher.this.updatePagesIndicator();
+            }
+//            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private class lastPage implements ActionListener{
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param e the event to be processed
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(MainWindow.getInstance().lastPage()){
+                PageSwitcher.this.index--;
+                PageSwitcher.this.updatePagesIndicator();
+            }
+//            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
         }
     }
 

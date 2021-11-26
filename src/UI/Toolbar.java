@@ -1,13 +1,12 @@
-import java.awt.BorderLayout;
-import java.util.List;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import java.awt.Font;
+package UI;
 
+import Listener.Utils;
+
+import java.awt.*;
+import java.util.List;
+import javax.swing.*;
+
+import Listener.*;
 // 该类用于构建工具栏
 public class Toolbar extends JPanel {
     // 单例模式
@@ -49,7 +48,7 @@ public class Toolbar extends JPanel {
         northPanel.add(fore);
         northPanel.add(back);
         // 添加线条粗细调整到toolbar的第二行
-        southPanel.add(new Linewidth());
+        southPanel.add(new LineWidth());
         // 添加字体选择器到toolbar的第二行
         setComboBox(Utils.getSystemFonts());
         southPanel.add(fontChooser);
@@ -96,5 +95,56 @@ public class Toolbar extends JPanel {
 
     public int getSelectedSize() {
         return (Integer) this.sizeChooser.getSelectedItem();
+    }
+
+    private static class Colorlist extends JPanel {
+//        static final long serialVersionUID = 1471001741;
+
+        public Colorlist() {
+            // 得到监听器实例
+            MainWindowListener el = new MainWindowListener();
+            // 为列表使用二行四列的栅格布局
+            this.setLayout(new GridLayout(2, 4, 2, 2));
+            // 通过颜色数组快速构建前七个按钮
+            Color[] colorArray = { Color.BLACK, Color.BLUE, Color.YELLOW, Color.GREEN, Color.PINK, Color.RED, Color.CYAN };
+            for (Color item : colorArray) {
+                JButton tmp = new JButton();
+                tmp.setBackground(item);
+                // 为该按钮添加点击监听，详见EventListener->actionPerformed
+                tmp.addActionListener(el);
+                this.add(tmp);
+            }
+            // 最后一个按钮是自定义颜色
+            JButton customColor = new JButton();
+            customColor.setBackground(Color.WHITE);
+            // 为该按钮加入与其它按钮相同的监听
+            customColor.addActionListener(el);
+            // 点击弹出颜色对话框，将选中颜色设置为背景色
+            // 注意：经过测试，多个ActionListener的情况下会优先执行后添加的
+            customColor.addActionListener(e -> {
+                Color selectedColor = JColorChooser.showDialog(null, "自定义颜色", Color.BLACK);
+                if (selectedColor == null) {
+                    selectedColor = Color.WHITE;
+                }
+                customColor.setBackground(selectedColor);
+            });
+            this.add(customColor);
+        }
+    }
+
+    // 调整线宽
+    public static class LineWidth extends JPanel {
+//    private static final long serialVersionUID = 15100151;
+
+        public LineWidth() {
+            this.add(new JLabel("线条粗细"));
+            JSlider slider = new JSlider(1, 9, 1);
+            slider.setMajorTickSpacing(4);
+            slider.setMinorTickSpacing(1);
+            slider.setPaintTicks(true);
+            MainWindowListener el = new MainWindowListener();
+            slider.addChangeListener(el);
+            this.add(slider);
+        }
     }
 }

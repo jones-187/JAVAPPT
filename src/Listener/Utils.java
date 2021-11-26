@@ -1,3 +1,5 @@
+package Listener;
+
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.util.List;
@@ -8,9 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class Utils {
+public class Utils {
     // 字符串到字体的映射（本来考虑直接在下拉框中存字体，但字体类的toString()返回内容过长，故使用映射实现）
-    static Map<String, Font> map = new HashMap<>();
+    public static Map<String, Font> map = new HashMap<>();
 
     public static List<String> getSystemFonts() {
         Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();

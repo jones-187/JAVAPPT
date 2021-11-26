@@ -1,3 +1,9 @@
+package Listener;
+
+import UI.MainWindow;
+import UI.DrawingArea;
+import UI.Toolbar;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

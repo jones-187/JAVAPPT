@@ -1,3 +1,5 @@
+package Shape;
+
 import java.awt.*;
 
 public class InitShape extends Shape{

@@ -1,3 +1,5 @@
+package UI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -65,7 +67,7 @@ public class PageSwitcher extends JPanel {
                 PageSwitcher.this.index++;
                 PageSwitcher.this.updatePagesIndicator();
             }
-//            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
+//            JOptionPane.showMessageDialog(UI.PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -82,7 +84,7 @@ public class PageSwitcher extends JPanel {
                 PageSwitcher.this.index++;
                 PageSwitcher.this.updatePagesIndicator();
             }
-//            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
+//            JOptionPane.showMessageDialog(UI.PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -99,7 +101,7 @@ public class PageSwitcher extends JPanel {
                 PageSwitcher.this.index--;
                 PageSwitcher.this.updatePagesIndicator();
             }
-//            JOptionPane.showMessageDialog(PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
+//            JOptionPane.showMessageDialog(UI.PageSwitcher.this, "提示消息", "标题",JOptionPane.WARNING_MESSAGE);
         }
     }
 

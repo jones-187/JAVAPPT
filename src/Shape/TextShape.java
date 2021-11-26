@@ -1,5 +1,8 @@
+package Shape;
+
 import java.awt.*;
 
+import UI.*;
 // 该类可以根据选择操作操作的不同绘制不同种类的图
 public class TextShape extends MultiShape {
     private final int descent;

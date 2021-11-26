@@ -1,3 +1,5 @@
+package Listener;
+
 import java.awt.event.*;
 import javax.swing.event.*;
 
@@ -9,6 +11,11 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import Shape.*;
+import Shape.Shape;
+import UI.MainWindow;
+
+import UI.*;
 // 该类实现了鼠标事件、键盘事件和按钮点击事件的监听
 public class EventListener extends MouseInputAdapter implements  KeyListener { //ActionListener,, ChangeListener
     private int id;
@@ -77,7 +84,7 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
 //        JButton instance = (JButton) e.getSource();
 //        // 点击的是颜色（因为颜色按钮没有文字）
 //        if ("".equals(e.getActionCommand())) {
-//            if (Toolbar.getInstance().isForebackgroundSelected()) {
+//            if (UI.Toolbar.getInstance().isForebackgroundSelected()) {
 //                // 设置前景色
 //                selectedColor = instance.getBackground();
 //            } else {
@@ -90,14 +97,14 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
 //            // 选择帮助操作时输出帮助信息并return
 //            if (instance.getText().equals("帮助")) {
 //                showHelpMessage();
-//                MainWindow.getInstance().requestFocus();
+//                UI.MainWindow.getInstance().requestFocus();
 //                return;
 //            }
 //            // 否则将操作赋值给参数
 //            this.operation = instance.getText();
 //        }
 //        // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
-//        MainWindow.getInstance().requestFocus();
+//        UI.MainWindow.getInstance().requestFocus();
 //    }
 
     @Override
@@ -180,28 +187,28 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
             }
         }
 
-//        for (Shape shape:history
+//        for (Shape.Shape shape:history
 //             ) {
 //            if (shape == null) {
 //                continue;
 //            }
 //            shape.x1+=dX;
 //            shape.y1+=dY;
-//            if (shape instanceof MultiShape){
-//                ((MultiShape)shape).x2+=dX;
-//                ((MultiShape)shape).y2+=dY;
+//            if (shape instanceof Shape.MultiShape){
+//                ((Shape.MultiShape)shape).x2+=dX;
+//                ((Shape.MultiShape)shape).y2+=dY;
 //            }
 //        }
-//        for (Shape shape:previous
+//        for (Shape.Shape shape:previous
 //        ) {
 //            if (shape == null) {
 //                continue;
 //            }
 //            shape.x1+=dX;
 //            shape.y1+=dY;
-//            if (shape instanceof MultiShape){
-//                ((MultiShape)shape).x2+=dX;
-//                ((MultiShape)shape).y2+=dY;
+//            if (shape instanceof Shape.MultiShape){
+//                ((Shape.MultiShape)shape).x2+=dX;
+//                ((Shape.MultiShape)shape).y2+=dY;
 //            }
 //        }
 //        释放选中的图形
@@ -228,8 +235,8 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
         int maxX = 0,maxY = 0,minX = 0,minY = 0,minS=0;
         int curIndex=0,nextIndex=0,selectedIndex=-1;
         Iterator<Shape> curShape=previous.iterator();
-//        Iterator<Shape> nextShape=previous.iterator();
-//        Iterator<Shape> selectedShape=null;
+//        Iterator<Shape.Shape> nextShape=previous.iterator();
+//        Iterator<Shape.Shape> selectedShape=null;
         LinkedList<Shape> Rprevious = new LinkedList<>();
 //        倒置操作栈,用于遍历
         while(curShape.hasNext()){
@@ -436,7 +443,7 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
     private void addDragging()
     {
         // 添加新动作
-//        Shape tmp = new DragShape(x1, y1, x2, y2);
+//        Shape.Shape tmp = new Shape.DragShape(x1, y1, x2, y2);
         Shape tmp = new DragShape(x1, y1);
         // 加入历史
         history.add(tmp);

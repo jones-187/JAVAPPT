@@ -1,12 +1,8 @@
+package UI;
+
 import javax.swing.*;
 
 import java.awt.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 // 画图区域（窗口也是在该类中创建的）
 public class MainWindow extends  JFrame{
@@ -86,9 +82,9 @@ public class MainWindow extends  JFrame{
 //        if (image != null) {
 //            p.drawImage(image, 0, 0, null);
 //        }
-//        EventListener el = EventListener.getInstance();
+//        Listener.EventListener el = Listener.EventListener.getInstance();
 //        // 遍历绘图历史，绘制该图形
-//        for (Shape item : el.getHistory()) {
+//        for (Shape.Shape item : el.getHistory()) {
 //            item.draw(p);
 //        }
 //    }
@@ -139,7 +135,7 @@ public class MainWindow extends  JFrame{
 //            // 读取该张图片
 //            image = ImageIO.read(new File(filePath));
 //            // 清除所有历史
-//            EventListener.getInstance().clear(false);
+//            Listener.EventListener.getInstance().clear(false);
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //            return;

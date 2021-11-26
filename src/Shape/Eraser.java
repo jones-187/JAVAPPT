@@ -1,5 +1,6 @@
-import java.awt.Graphics;
+package Shape;
 
+import java.awt.Graphics;
 public class Eraser extends Shape {
     public Eraser(int x1, int y1) {
         super(x1, y1);

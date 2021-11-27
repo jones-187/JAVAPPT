@@ -22,8 +22,12 @@ public class MyMenuBar extends JMenuBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainWindow.getInstance().saveAs();
-            JOptionPane.showMessageDialog(MainWindow.getInstance(),"请保存");
+            String message;
+            if (MainWindow.getInstance().saveAs() )
+                message="已保存";
+            else
+                message="保存失败";
+            JOptionPane.showMessageDialog(MainWindow.getInstance(),message);
         }
     }
 
@@ -31,7 +35,12 @@ public class MyMenuBar extends JMenuBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainWindow.getInstance().load();
+            String message;
+            if ( MainWindow.getInstance().load() )
+                message="已载入";
+            else
+                message="载入失败";
+            JOptionPane.showMessageDialog(MainWindow.getInstance(),message);
         }
     }
 }

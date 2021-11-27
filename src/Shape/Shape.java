@@ -2,21 +2,22 @@ package Shape;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.Serializable;
 
 import Listener.EventListener;
 
 import UI.*;
 // 基本图形的抽象类（橡皮擦类和多图形类都从该类继承）
-public abstract class Shape {
+public abstract class Shape implements Serializable {
     public int x1;
     public int y1;
 //    protected static final Listener.EventListener el = Listener.EventListener.getInstance(UI.MainWindow.getInstance().getCurId());
-    EventListener el = EventListener.getInstance(MainWindow.getInstance().getCurId());
     protected Color selectedColor;
     protected String operation;
     protected int width;
 
     public Shape(int x1, int y1) {
+        EventListener el = EventListener.getInstance(MainWindow.getInstance().getCurId());
         selectedColor = el.getSelectedColor();
         operation = el.getOperation();
         width = el.getWidth();

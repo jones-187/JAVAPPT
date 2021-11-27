@@ -6,6 +6,7 @@ import javax.swing.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
@@ -34,11 +35,11 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
     // 画笔
     private Graphics pen;
     // 所有画过的图
-    private final Deque<Shape> history = new LinkedList<>();
+    private Deque<Shape> history = new LinkedList<>();
     // 保存实时按键的栈
     private final Deque<Integer> stack = new LinkedList<>();
     // 保存按鼠标时的历史状态（用于笔和橡皮擦的撤销）
-    private final Deque<Shape> previous = new LinkedList<>();
+    private Deque<Shape> previous = new LinkedList<>();
     // 选中的图形
     private Shape selectedShape=null;
     private Shape afterSelectedShape=null;
@@ -436,10 +437,6 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
         this.pen = pen;
     }
 
-    public Deque<Shape> getHistory() {
-        return this.history;
-    }
-
     private void addDragging()
     {
         // 添加新动作
@@ -508,5 +505,27 @@ public class EventListener extends MouseInputAdapter implements  KeyListener { /
 
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    public Deque<Shape> getPrevious() {
+        return this.previous;
+    }
+
+    public Deque<Shape> getHistory() {
+        return this.history;
+    }
+
+    public static int getCount(){
+        return EventListener.elList.size();
+    }
+
+
+    public static void reset() {
+        elList.clear();
+    }
+
+    public void load(Deque<Shape> history, Deque<Shape> previous) {
+        this.history=history;
+        this.previous=previous;
     }
 }

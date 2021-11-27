@@ -1,9 +1,13 @@
 package Shape;
 
+import Listener.EventListener;
+import UI.MainWindow;
+
 import java.awt.Graphics;
 public class Eraser extends Shape {
     public Eraser(int x1, int y1) {
         super(x1, y1);
+        EventListener el = EventListener.getInstance(MainWindow.getInstance().getCurId());
         selectedColor=el.getBackgroundColor();
     }
 
@@ -17,6 +21,7 @@ public class Eraser extends Shape {
     @Override
     public void refresh() {
         // 刷新颜色
+        EventListener el = EventListener.getInstance(MainWindow.getInstance().getCurId());
         this.selectedColor = el.getBackgroundColor();
     }
 }

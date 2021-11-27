@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Deque;
 
 import Shape.Shape;
 public class DrawingArea extends JPanel {
@@ -135,9 +136,24 @@ public class DrawingArea extends JPanel {
         }
     }
 
-
     public void clearFile() {
         // 移除内部的图片缓存
         this.image = null;
     }
+
+    public static void reset(){
+        EventListener.reset();
+        pageList.clear();
+    }
+
+    public static void load(int count,ArrayList<Deque<Shape>> historyList, ArrayList<Deque<Shape>> previousList){
+        DrawingArea.reset();
+        for (int i = 0; i < count; i++) {
+            DrawingArea.addInstance(i);
+            EventListener.getInstance(i).load(historyList.get(i), previousList.get(i));
+        }
+    }
+//    public static int getCount(){
+//        return DrawingArea.pageList.size();
+//    }
 }

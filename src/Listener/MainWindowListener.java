@@ -12,10 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainWindowListener implements ActionListener, ChangeListener {
-    private Color selectedColor;
-    private Color backgroundColor;
-    private String operation;
-    private int width;
 
     /**
      * Invoked when an action occurs.
@@ -29,11 +25,11 @@ public class MainWindowListener implements ActionListener, ChangeListener {
         if ("".equals(e.getActionCommand())) {
             if (Toolbar.getInstance().isForebackgroundSelected()) {
                 // 设置前景色
-                selectedColor = instance.getBackground();
+                Color selectedColor = instance.getBackground();
                 EventListener.getInstance( MainWindow.getInstance().getCurId() ).setSelectedColor(selectedColor);
             } else {
                 // 设置背景色
-                backgroundColor = instance.getBackground();
+                Color backgroundColor = instance.getBackground();
                 EventListener.getInstance( MainWindow.getInstance().getCurId() ).setBackgroundColor(backgroundColor);
                 // 刷新画板
                 EventListener.getInstance( MainWindow.getInstance().getCurId() ).setBackgroundColor();
@@ -46,7 +42,7 @@ public class MainWindowListener implements ActionListener, ChangeListener {
                 return;
             }
             // 否则将操作赋值给参数
-            this.operation = instance.getText();
+            String operation = instance.getText();
             EventListener.getInstance( MainWindow.getInstance().getCurId() ).setOperation(operation);
         }
         // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
@@ -61,7 +57,7 @@ public class MainWindowListener implements ActionListener, ChangeListener {
     @Override
     public void stateChanged(ChangeEvent e) {
         JSlider jslider = (JSlider) e.getSource();
-        this.width = jslider.getValue();
+        int width = jslider.getValue();
         EventListener.getInstance( MainWindow.getInstance().getCurId() ).setWidth(width);
         // 将焦点还给绘图区域（没有焦点没有办法响应键盘事件）
         DrawingArea.getInstance( MainWindow.getInstance().getCurId() ).requestFocus();

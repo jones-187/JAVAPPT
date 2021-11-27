@@ -1,5 +1,7 @@
 package UI;
 
+import Listener.EventListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,12 +47,17 @@ public class PageSwitcher extends JPanel {
     }
 
     private void updatePagesIndicator(){
+        totalPagesNum = EventListener.getCount();
         StringBuilder sb= new StringBuilder();
         sb.append(index);
         sb.append(" / ");
         sb.append(totalPagesNum);
         this.pagesIndicator.setText(sb.toString());
         pagesIndicator.repaint();
+    }
+
+    public static void reset() {
+        instance=new PageSwitcher();
     }
 
     private class getNewPage implements ActionListener{
